@@ -1,4 +1,3 @@
-using CustomerService.Models;
 using Microsoft.AspNetCore.OData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OData.ModelBuilder;
