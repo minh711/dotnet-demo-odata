@@ -2,7 +2,7 @@ using demo_odata.Models;
 using Microsoft.EntityFrameworkCore;
 
 
-namespace CustomerService.Models
+namespace demo_odata.Models
 {
     public class AppDbContext : DbContext
     {
