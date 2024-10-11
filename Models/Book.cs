@@ -26,8 +26,8 @@ namespace demo_odata.Models
         [ForeignKey("PressId")]
         public int PressId { get; set; }
 
-        public Address? Location { get; set; }
+        public virtual Address? Location { get; set; }
 
-        public Press? Press { get; set; }
+        public virtual Press? Press { get; set; }
     }
 }

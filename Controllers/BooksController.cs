@@ -5,11 +5,11 @@ using demo_odata.Models;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.OData.Formatter;
+using Microsoft.AspNetCore.OData.Deltas;
+using Microsoft.EntityFrameworkCore;
 
 namespace demo_odata.Controllers
 {
-    [Route("odata/[controller]")]
-    [ApiController]
     public class BooksController : ODataController
     {
         private readonly AppDbContext _db;
@@ -28,7 +28,11 @@ namespace demo_odata.Controllers
         [EnableQuery]
         public ActionResult<Book> Get([FromODataUri] int key)
         {
-            var book = _db.Books.Find(key);
+            var book = _db.Books
+                    .Include(b => b.Location)
+                    .Include(b => b.Press)
+                    .SingleOrDefault(b => b.Id == key);
+
             if (book == null)
             {
                 return NotFound();
@@ -49,6 +53,21 @@ namespace demo_odata.Controllers
             await _db.SaveChangesAsync();
 
             return Created(book);
+        }
+
+        [EnableQuery]
+        public async Task<IActionResult> Patch([FromODataUri] int key, [FromBody] Delta<Book> patch)
+        {
+            var book = await _db.Books.FindAsync(key);
+            if (book == null)
+            {
+                return NotFound();
+            }
+
+            patch.Patch(book);
+            await _db.SaveChangesAsync();
+
+            return Updated(book);
         }
 
         [EnableQuery]
